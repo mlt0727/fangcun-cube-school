@@ -63,7 +63,7 @@ function renderStages(){
     const done=!!lesson&&checks[i];
     const expanded=i===visible,group=current?lesson.groups[current.groupIndex]:null,isCurrent=i===active;
     const body=expanded?`<div class="stage-body"><p>${esc(stage.why)}</p><div class="goal-box"><strong>当前目标</strong>${esc(stage.goal)}</div>${lesson&&stageSteps.length===0?'<p>该阶段无需单独的动作；完成前面的步骤后，请检查上方目标。</p>':''}${group&&isCurrent&&index<timeline.steps.length?`<p>${esc(group.explanation)}</p><div class="current-move"><strong>当前转动${current.role?' · '+current.role:''} · 本组第 ${current.moveIndex+1} / ${group.moves.length} 步</strong><div class="move-detail"><kbd>${esc(current.move.replaceAll("'",'′'))}</kbd><span>${esc(describeMove(current.move,n))}<br><span class="formula-note">正对正在转的那一面看。细框标记本组观察块。</span></span></div></div>`:''}${lesson&&index===timeline.steps.length&&isCurrent?'<div class="current-move"><strong>✓ 还原完成</strong>回看任一阶段，把这次学会的动作再练一遍。</div>':''}</div>`:'';
-    return `<div class="stage ${expanded?'active':''} ${done?'done':''}"><button class="stage-heading" data-stage="${i}" aria-expanded="${expanded}"><span class="stage-num">${done?'✓':i+1}</span><span>${esc(stage.title)}</span><span class="stage-arrow">${expanded?'⌃':'⌄'}</span></button>${body}</div>`;
+    return `<div class="stage ${expanded?'active':''} ${done?'done':''}"><button class="stage-heading" data-stage="${i}" aria-expanded="${expanded}"><span class="stage-num">${done?'✓':i+1}</span><span>${esc(stage.title)}${lesson?` · ${stageSteps.length} 次`:''}</span><span class="stage-arrow">${expanded?'⌃':'⌄'}</span></button>${body}</div>`;
   }).join('');
 }
 function updateControls(){
@@ -84,7 +84,7 @@ function updateControls(){
 }
 function renderAll(){
   $('cube-title').textContent=n===3?'三阶魔方':'四阶魔方';
-  $('method-label').textContent=n===3?'初学者逐层法 · 黄底起步':'基础三循环降阶 → 三阶逐层法';
+  $('method-label').textContent=n===3?'初学者逐层法 · 黄底起步':'拼中心 · 配棱 → 三阶逐层法';
   document.querySelectorAll('[data-size]').forEach(b=>b.setAttribute('aria-pressed',Number(b.dataset.size)===n));
   $('input-orientation').textContent=n===3?'固定白面朝上，绿面朝前，红面在右。':'固定一个拿法，按上、前、右方向录入。中心颜色不决定当前面的名称。';
   $('lesson-intro').textContent=n===3?'从底层开始，逐步完成，理解每一步。':'先拼中心，再配棱，然后像三阶一样解。';

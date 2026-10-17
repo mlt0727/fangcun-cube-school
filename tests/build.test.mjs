@@ -16,7 +16,10 @@ test('静态发布为资源更新地址，避免刷新后继续使用旧的样�
   const html='<link rel="stylesheet" href="./src/style.css"><script type="module" src="./src/app.js"></script>';
   await writeFile(join(root,'index.html'),html);await writeFile(join(root,'favicon.svg'),'<svg/>');
   await writeFile(join(root,'src/style.css'),'.scene{user-select:none}');
-  await writeFile(join(root,'src/app.js'),'console.log("first")');
+  const app="import './solver.js'; const worker=new Worker(new URL('./worker.js',import.meta.url),{type:'module'});";
+  await writeFile(join(root,'src/app.js'),app);
+  await writeFile(join(root,'src/solver.js'),'export const solve=()=>1;');
+  await writeFile(join(root,'src/worker.js'),"import {solve} from './solver.js';");
   const build=async()=>{execFileSync(process.execPath,[join(root,'scripts/build.mjs')],{stdio:'pipe'});const built=await readFile(join(root,'dist/index.html'),'utf8');return {css:built.match(/href="([^"]+)"/)[1],js:built.match(/src="([^"]+)"/)[1]};};
   const first=await build();
   assert.notEqual(first.css,'./src/style.css');assert.notEqual(first.js,'./src/app.js');
@@ -25,5 +28,14 @@ test('静态发布为资源更新地址，避免刷新后继续使用旧的样�
   const second=await build();assert.notEqual(second.css,first.css);assert.equal(second.js,first.js);
   await writeFile(join(root,'src/app.js'),'console.log("updated")');
   const third=await build();assert.notEqual(third.js,second.js);assert.equal(third.css,second.css);
+  await writeFile(join(root,'src/solver.js'),'export const solve=()=>2;');
+  const fourth=await build();assert.notEqual(fourth.js,third.js,'只改求解模块时，也必须更新入口版本');
+  const version=fourth.js.split('?v=')[1];
+  const worker=await readFile(join(root,'dist/src/worker.js'),'utf8');
+  assert.ok(worker.includes('./solver.js?v='+version),'Worker 依赖必须使用同一版求解器');
+  await writeFile(join(root,'src/app.js'),app);
+  const fifth=await build(),appBuilt=await readFile(join(root,'dist/src/app.js'),'utf8');
+  assert.ok(appBuilt.includes('./worker.js?v='+fifth.js.split('?v=')[1]),'Worker 本身也需要更新版本');
+  assert.equal(await readFile(join(root,'src/app.js'),'utf8'),app,'构建不修改源码中的模块地址');
   assert.equal(await readFile(join(root,'index.html'),'utf8'),html,'构建不修改源文件');
 });
