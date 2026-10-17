@@ -8,4 +8,4 @@
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}.busy #solve:after{animation:none}}
 
 .tile.focused:not(.inner){box-shadow:inset 0 0 0 2px #f5d79a,inset 0 0 12px #e7ba5926}.slice.active .tile.focused:not(.inner){box-shadow:inset 0 0 0 2px #f5d79a}
-.scene{-webkit-user-select:none;user-select:none}
+.scene,.scene *{-webkit-user-select:none;user-select:none}

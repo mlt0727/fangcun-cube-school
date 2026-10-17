@@ -169,9 +169,15 @@ $('move-strip').onclick=e=>{const b=e.target.closest('[data-group-step]');if(b)j
 $('stages').onclick=e=>{const b=e.target.closest('[data-stage]');if(b){const s=Number(b.dataset.stage);openStage=openStage===s?null:s;renderStages();}};
 $('view-reset').onclick=()=>{angleX=-24;angleY=-34;$('cube').style.transform=`rotateX(${angleX}deg) rotateY(${angleY}deg)`;};
 let drag=null;
-$('scene').onpointerdown=e=>{if(e.button!==0)return;drag={x:e.clientX,y:e.clientY,ax:angleX,ay:angleY};$('scene').setPointerCapture(e.pointerId);};
+$('scene').onpointerdown=e=>{
+  if(e.button!==0)return;
+  e.preventDefault();
+  window.getSelection()?.removeAllRanges();
+  drag={x:e.clientX,y:e.clientY,ax:angleX,ay:angleY};$('scene').setPointerCapture(e.pointerId);
+};
+$('scene').onselectstart=$('scene').ondragstart=e=>e.preventDefault();
 $('scene').onpointermove=e=>{if(!drag)return;angleX=Math.max(-85,Math.min(85,drag.ax-(e.clientY-drag.y)*.4));angleY=drag.ay+(e.clientX-drag.x)*.4;$('cube').style.transform=`rotateX(${angleX}deg) rotateY(${angleY}deg)`;};
-$('scene').onpointerup=$('scene').onpointercancel=()=>drag=null;
+$('scene').onpointerup=$('scene').onpointercancel=$('scene').onlostpointercapture=()=>drag=null;
 $('help').onclick=()=>$('help-dialog').showModal();$('close-help').onclick=()=>$('help-dialog').close();
 $('help-dialog').onclick=e=>{if(e.target===$('help-dialog')){const r=e.target.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)e.target.close();}};
 document.addEventListener('keydown',e=>{
