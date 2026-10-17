@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#365c47">
+  <meta name="description" content="为你的三阶、四阶魔方生成逐步中文教学。涂色录入，分层理解，动画跟练。">
+  <title>方寸 · 一步一步学魔方</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./src/style.css">
+  <script type="module" src="./src/app.js"></script>
+</head>
+<body>
+  <header class="header">
+    <a class="brand" href="./" aria-label="方寸首页"><svg viewBox="0 0 36 40" fill="none" aria-hidden="true"><path d="m18 2 15 9v18l-15 9L3 29V11L18 2Zm0 18v18M3 11l15 9 15-9M10.5 6.5l15 9v18M25.5 6.5l-15 9v18M3 20l15 9 15-9" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><span>方寸</span></a>
+    <p class="tagline">一步一步，理解每一次转动</p>
+    <button class="text-button" id="help">新手入门指南 <span aria-hidden="true">↗</span></button>
+  </header>
+  <main>
+    <div class="page-heading"><div class="heading-left"><h1 id="cube-title">三阶魔方</h1><div class="segmented" role="group" aria-label="选择魔方阶数"><button data-size="3" aria-pressed="true">3 × 3</button><button data-size="4" aria-pressed="false">4 × 4</button></div></div><p id="method-label">初学者逐层法 · 黄底起步</p></div>
+    <div class="workspace">
+      <section class="input-panel panel" aria-labelledby="input-heading">
+        <h2 id="input-heading"><span class="section-number">01</span> 录入你的魔方</h2>
+        <p class="muted intro">选择一种颜色，再点击展开图上的色块。<br><span id="input-orientation">固定白面朝上，绿面朝前，红面在右。</span></p>
+        <div id="palette" class="palette" role="group" aria-label="涂色颜色"></div>
+        <div class="net-wrap"><div id="net" class="net" aria-label="魔方六面展开图"></div></div>
+        <div class="input-actions"><button class="text-button" id="example">换个示例</button><button class="text-button" id="clear">清空涂色</button><button class="text-button" id="reset">已还原</button></div>
+        <div class="validation" id="validation" role="status" aria-live="polite"></div>
+        <button class="primary solve-button" id="solve">开始学习 <span aria-hidden="true">→</span></button>
+        <p class="local-note">计算在浏览器内完成，颜色保存在本机。</p>
+      </section>
+      <section class="viewer-panel panel" aria-label="魔方动画与播放控制">
+        <div class="viewer-top"><span id="scene-status">先观察，再动手</span><button class="text-button" id="view-reset" title="恢复观察角度">复位视角 ↺</button></div>
+        <div class="scene" id="scene" aria-label="可拖动旋转视角的三维魔方" role="img"><span class="axis-label axis-top">上 U · 白</span><span class="axis-label axis-front">前 F · 绿</span><span class="axis-label axis-right">右 R · 红</span><div class="cube-shadow"></div><div id="cube" class="cube"></div><span class="drag-hint">拖动魔方，自由观察六面</span></div>
+        <div class="transport" role="group" aria-label="播放控制">
+          <button class="circle" id="first" aria-label="回到第一步" title="回到第一步">⏮</button>
+          <button class="circle" id="prev" aria-label="上一步" title="上一步（左方向键）">◀</button>
+          <button class="circle play-button" id="play" aria-label="播放" title="播放或暂停（空格）">▶</button>
+          <button class="circle" id="next" aria-label="下一步" title="下一步（右方向键）">▶</button>
+          <button class="circle" id="replay" aria-label="重播当前公式" title="重播当前公式">↻</button>
+        </div>
+        <div class="speed-row"><label for="speed">速度</label><input type="range" id="speed" min="0.5" max="3" step="0.25" value="1"><output for="speed" id="speed-output">1×</output></div>
+        <div class="timeline"><div class="timeline-label"><span id="progress-label">准备好后，开始你的第一步</span><span id="step-count">0 / 0</span></div><input type="range" id="progress" min="0" max="0" value="0" aria-label="当前教学步骤"></div>
+        <div class="move-strip" id="move-strip" aria-label="当前公式"></div>
+        <p class="play-note" id="play-note">可以暂停、回退，也可以只重播一组动作。</p>
+      </section>
+      <section class="teaching-panel panel" aria-labelledby="teaching-heading">
+        <h2 id="teaching-heading"><span class="section-number">02</span> 跟着步骤慢慢来</h2>
+        <p class="muted intro" id="lesson-intro">从底层开始，逐步完成，理解每一步。</p>
+        <div id="stages" class="stages"></div>
+        <button class="text-button export-button" id="export" disabled>下载完整中文步骤 ↓</button>
+      </section>
+    </div>
+    <section class="notation" aria-label="转动符号说明"><strong>转动符号说明</strong><span><kbd>R</kbd> 右面</span><span><kbd>U</kbd> 上面</span><span><kbd>F</kbd> 前面</span><span><kbd>D</kbd> 下面</span><span><kbd>L</kbd> 左面</span><span><kbd>B</kbd> 后面</span><p>字母：正对该面看，顺时针 90°；<b>′</b>：逆时针 90°；<b>2</b>：转 180°。四阶 <b>2R</b> 表示只转右侧第二层，<b>Rw</b> 表示右侧两层一起转。</p></section>
+    <details class="all-steps" id="all-steps"><summary>查看完整教学清单 <span id="lesson-summary">生成解法后可展开</span></summary><div id="lesson-list"><p class="muted">先录入你的魔方，再点击“开始学习”。</p></div></details>
+    <footer>方寸 <span>·</span> 不赶时间，把每一步弄明白。<span class="keyboard-note">空格 播放 / 暂停　← → 前后一步</span></footer>
+  </main>
+  <dialog id="help-dialog"><div class="dialog-top"><h2>从这里开始</h2><button class="text-button" id="close-help" aria-label="关闭指南">关闭 ×</button></div><p>这是一张可以跟着练习的魔方学习台。默认展开图是可还原的示例，你也可以涂入自己手里的魔方。</p><h3>怎样录入六个面？</h3><p>先选择白面朝上、绿面朝前、红面在右的姿势。侧面（前、右、后、左）的每一行都以白面方向为上；顶面的前方在展开图下边，底面的前方在展开图上边。三阶中心固定，不需要修改。</p><p>四阶中心会移动：先固定一个拿法，把上、前、右三个方向记住，再按展开图录入六面。不要根据打乱后的中心颜色给面命名。还原目标是白上、绿前、红右；角块的颜色顺序需符合这种普通魔方配色。</p><h3>为什么先做黄色底层？</h3><p>我们一直保持白上、绿前的参照方向，以黄色为底层学习逐层法。学会后，同样的思路可以从任意颜色开始。</p><h3>怎么跟着动画转？</h3><p>动画每次只执行一个符号。顺时针和逆时针都以“正对正在转的那一面看”为准。先读右侧解释，再点击下一步；拖动视角只改变观察角度，不会改变公式中的前后左右。</p><h3>四阶怎样降阶？</h3><p>先用三块循环逐块拼中心，再逐块配棱，最后把每个 2×2 中心视为一个中心、每对翼棱视为一条棱，复用三阶逐层教学。这是便于逐次验算的基础三循环方案，准备动作较多。每套公式完整结束后才检查已完成部分；中途暂时打乱会在撤销动作中恢复。</p><p class="muted">此版本适用于普通六色、无图案的三阶和四阶魔方。四阶同色中心不区分转向。解法参考：<a href="https://jperm.net/3x3" target="_blank" rel="noreferrer">三阶初学者方法</a>、<a href="https://jperm.net/4x4" target="_blank" rel="noreferrer">四阶降阶原理</a>。</p></dialog>
+</body>
+</html>
