@@ -1,78 +1,78 @@
-# 方寸 · 一步一步学魔方
+# Fangcun · Learn to Solve a Cube, Step by Step
 
-三阶与四阶的中文魔方学习网站，使用 HTML、CSS、原生 JavaScript。无需安装依赖、API 密钥、后端或数据库。可以发布到 GitHub Pages 的仓库子路径。
+A Chinese-language learning website for 3×3 and 4×4 cubes, built with HTML, CSS, and vanilla JavaScript. No dependency installation, API keys, backend, or database are required. It can be deployed under a repository subpath on GitHub Pages.
 
-在线访问：[方寸魔方学习台](https://mlt0727.github.io/fangcun-cube-school/)
+Live site: [Fangcun Cube School](https://mlt0727.github.io/fangcun-cube-school/)
 
-源码仓库：[mlt0727/fangcun-cube-school](https://github.com/mlt0727/fangcun-cube-school)
+Source: [mlt0727/fangcun-cube-school](https://github.com/mlt0727/fangcun-cube-school)
 
-## 本地运行
+## Run locally
 
-安装 Node.js 24 或更高版本后，在当前文件夹运行：
+Install Node.js 24 or newer, then run the following in the project directory:
 
-```sh
+~~~sh
 npm start
-```
+~~~
 
-打开终端显示的本地地址，默认是 `http://127.0.0.1:4173`。请通过 HTTP 地址访问；不要双击 HTML 文件，浏览器会限制 ES 模块和 Worker。
+Open the local address printed in the terminal; the default is `http://127.0.0.1:4173`. Use the HTTP address instead of opening the HTML file directly, because browsers restrict ES modules and Workers on file URLs.
 
-```sh
+~~~sh
 npm test
 npm run build
 npm run benchmark
-```
+~~~
 
-构建结果在 `dist/`。运行时不加载 CDN、远程脚本或字体。
+Build output is written to `dist/`. The application loads no CDNs, remote scripts, or fonts at runtime.
 
-## 使用
+## Use the site
 
-1. 选择三阶或四阶。默认展示合法打乱示例。
-2. 如需录入实物，点击“清空涂色”，选择颜色并逐格涂色。三阶固定白上、绿前、红右；四阶先固定一个拿法，按上、前、右录入，白上、绿前、红右是还原目标。其他面的录入方向见“新手入门指南”。三阶中心不能修改。
-3. 点击“开始学习”。程序会检查颜色数量、块的组合、角块扭转；三阶还检查棱块翻转和置换奇偶；四阶检查翼棱的颜色与手性。无效状态不会生成解法。
-4. 先读目标和当前组动作的解释，再逐次点击“下一步”，或播放动画。支持暂停在转动中途、精确回退、重播当前公式、回到第一步、进度拖动、速度调整和拖动观察。
-5. 下方“完整教学清单”包含每一组公式和每一次转动的中文解释，也可以下载文本。
+1. Choose a 3×3 or 4×4 cube. A valid scrambled example is shown by default.
+2. To enter a physical cube, select **Clear coloring**, choose a color, and paint each sticker. For 3×3, keep white on top, green in front, and red on the right. For 4×4, choose one fixed orientation and enter the faces relative to the top, front, and right; white on top, green in front, and red on the right is the solved target. The beginner guide explains how to orient the other faces during entry. The 3×3 centers cannot be edited.
+3. Select **Start learning**. The program checks color counts, piece combinations, and corner twists. It also checks edge flips and permutation parity for 3×3, and wing-edge colors and handedness for 4×4. Invalid states do not produce a solution.
+4. Read the goal and explanation for the current move group, then select **Next step** repeatedly or play the animation. Controls support pausing mid-turn, precise backward stepping, replaying the current algorithm, returning to the first step, seeking through progress, changing speed, and dragging to inspect the cube.
+5. The **Complete lesson list** below the player contains a Chinese explanation of every algorithm group and every turn. It can also be downloaded as text.
 
-学习以黄色为底层，白上、绿前的参照保持不变。改变观察视角不改变公式中的面。颜色保存在本机 localStorage；清除浏览器数据会删除保存的涂色。学习进度不跨刷新保存。
+The interface uses Chinese; the control names above are English translations. Lessons solve the yellow layer first while keeping the white-up, green-front reference fixed. Changing the viewing angle does not change the faces referenced by an algorithm. Colors are saved in the device's localStorage; clearing browser data removes them. Lesson progress is not saved across page reloads.
 
-## 教学算法
+## Teaching algorithms
 
-三阶按七阶段逐层法：底层十字 → 底层角块 → 中层棱块 → 顶层十字 → 顶棱归位 → 顶角归位 → 顶角调向。每阶段仅在有限的目标块位置中搜索该阶段允许的基础转动或公式，后续公式保护之前完成的阶段。不是将全局最短解贴上分层标签。
+The 3×3 solver uses a seven-stage layer-by-layer method: bottom cross → bottom corners → middle edges → top cross → top-edge permutation → top-corner permutation → top-corner orientation. Each stage searches only the limited set of target-piece positions using the basic turns or algorithms allowed for that stage. Later algorithms preserve completed stages. It does not take a globally shortest solution and label portions as teaching stages.
 
-四阶先**按颜色拼中心，再配成十二组棱**：中心按白、黄、绿、蓝、红的顺序拼合，最后橙面自然完成。只搜索当前颜色的四个中心位置，用外层对齐及“转内层、调整、转回内层”的短动作，保留已完成的中心面；同色中心不分编号。配棱用纯翼棱三循环，把同色伙伴送到相邻位置，不要求整组棱回到最终位置，也不拆开已经配好的棱。每组配棱公式包括准备、八步循环、撤销准备；整组结束时才保证中心和已有配棱恢复。已经降阶的状态直接进入三阶教学。
+The 4×4 solver first **builds centers by color, then pairs the twelve edges**. Centers are completed in white, yellow, green, blue, and red order; the orange face follows automatically. The search tracks only the four centers of the current color, using outer-layer alignment and short inner-turn/setup/undo-inner-turn sequences while preserving completed center faces. Centers of the same color have no individual identities. Edge pairing uses pure three-wing cycles to place matching wings next to one another. Paired edges do not have to reach their final positions, and already paired edges remain paired. Each pairing algorithm consists of setup moves, an eight-move cycle, and undoing the setup; centers and previously paired edges are guaranteed to be restored only at the end of the complete group. An already reduced state goes directly to the 3×3 lesson.
 
-降阶后按实际状态检查翻棱（OLL）与交换（PLL）奇偶，只执行必要的特殊公式，再复用三阶七阶段教学。不是全局最短解；每次真实转动都保留中文解释和动画，每个阶段显示转动次数。
+After reduction, the solver checks the actual state for edge-flip (OLL) and edge-swap (PLL) parity, applies only the special algorithms needed, and then reuses the seven-stage 3×3 lesson. Solutions are not globally shortest. Every actual turn retains a Chinese explanation and animation, and each stage shows its move count.
 
-`npm run benchmark` 使用种子 `20261017`，生成 30 个各打乱 35 次的独立四阶状态，并逐个完整回放。2026-10-17 的修正前后对比：
+`npm run benchmark` uses seed `20261017` to generate 30 independent 4×4 states, each scrambled with 35 moves, and replays every solution in full. The comparison before and after the 2026-10-17 correction was:
 
-| 阶段 | 修正前平均转动 | 修正后平均转动 |
+| Stage | Mean moves before | Mean moves after |
 | --- | ---: | ---: |
-| 中心 | 286.0 | 28.2 |
-| 配棱 | 287.9 | 69.3 |
-| 奇偶修正 | 3.8 | 11.2 |
-| 三阶逐层法 | 119.7 | 126.1 |
-| 总计 | 697.4 | 234.7 |
+| Centers | 286.0 | 28.2 |
+| Edge pairing | 287.9 | 69.3 |
+| Parity correction | 3.8 | 11.2 |
+| 3×3 layer-by-layer method | 119.7 | 126.1 |
+| Total | 697.4 | 234.7 |
 
-本批新版样本总计 162～278 次。每个公式符号计一次，180° 和宽层转动各计一次；样本范围不代表所有状态的上限。回归测试同时检查步数、最终还原和配棱过程对已有成果的保护。仅一次 `R` 的输入由原先 149 次改为 1 次；仅一次 `2R` 也只需 1 次。
+The updated samples took 162–278 moves in total. Each algorithm symbol counts as one move, including a 180° turn or a wide turn. This sample range is not an upper bound for all states. Regression tests check move counts, the final solved state, and preservation of completed work during edge pairing. An input consisting of a single `R` now takes one move instead of 149; a single `2R` also takes one move.
 
-普通无图案六色魔方适用；四阶同色中心视为可互换，图案中心的独立朝向不在范围内。配色由展开图约定；其他物理配色需先按角块关系调整颜色映射，当前不提供自定义配色。
+The solvers support ordinary six-color cubes without pictures. Same-color 4×4 centers are interchangeable; independently oriented picture centers are outside the scope. The net defines the color scheme. Other physical color schemes require adjusting the color mapping to match corner relationships; custom color schemes are not currently supported.
 
-两个求解器只接收颜色数组，完全不需要打乱历史。解法生成后在贴纸转动模型上完整回放，确认最终六面归位后才交给界面。每个转动的状态快照支持回退与重播。求解在 Web Worker 内完成，编辑颜色或切换阶数会终止过期计算和动画。
+Both solvers accept only color arrays and require no scramble history. Every generated solution is replayed in full on the sticker-turn model and passed to the interface only after all six faces are verified as solved. A state snapshot for every turn supports backward stepping and replay. Solving runs in a Web Worker; editing colors or switching cube sizes cancels stale calculations and animations.
 
-参考原理：[J Perm 三阶初学者方法](https://jperm.net/3x3)、[J Perm 四阶降阶与特殊情况](https://jperm.net/4x4)。翼棱公式 `2R U 2R' D 2R U' 2R' D'` 结合共轭准备动作实现三块换位，局部作用由几何模型验算。OLL 公式来自上述四阶教程，将其中的整魔方 `x` 展开为等价的 `Rw Lw'` 并合并相邻转动，以保持固定参照方向。构建时为全部模块与 Worker 依赖加上统一内容版本，避免旧缓存继续执行旧算法。
+References: [J Perm's beginner 3×3 method](https://jperm.net/3x3) and [J Perm's 4×4 reduction and special cases](https://jperm.net/4x4). The wing algorithm `2R U 2R' D 2R U' 2R' D'` combines with conjugating setup moves to cycle three wings; its local effect is checked by the geometric model. The OLL algorithm comes from the linked 4×4 tutorial, with the whole-cube `x` rotation expanded into the equivalent `Rw Lw'` and adjacent turns merged to preserve the fixed reference orientation. The build assigns a shared content version to all modules and Worker dependencies so stale caches do not keep running older algorithms.
 
-## 发布到 GitHub Pages
+## Deploy to GitHub Pages
 
-1. 将本文件夹上传到你的 GitHub 仓库，主分支命名为 `main`。
-2. 在仓库 **Settings → Pages → Build and deployment → Source** 中选择 **GitHub Actions**。
-3. 推送到 `main`，或在 Actions 中手动运行 **Deploy to GitHub Pages**。
+1. Upload this directory to your GitHub repository with `main` as the default branch.
+2. In **Settings → Pages → Build and deployment → Source**, select **GitHub Actions**.
+3. Push to `main` or manually run **Deploy to GitHub Pages** in Actions.
 
-工作流先执行测试与静态构建，再发布 `dist/`。发布地址在工作流的 deployment 环境中显示。Pages 需要对应的仓库和账户权限；本地项目准备好不等于网站已经公开上线。
+The workflow runs tests and builds the static site before publishing `dist/`. The deployment environment in the workflow shows the published URL. Pages requires the appropriate repository and account permissions; preparing a local project does not itself publish the website.
 
-## 文件
+## Files
 
-- `src/cube.js`：任意三阶、四阶转动与实际状态检查。
-- `src/solver.js`：三阶逐层教学及四阶流程衔接。
-- `src/reduction.js`：四阶按颜色拼中心、翼棱配对、特殊奇偶与降阶。
-- `src/timeline.js`：原子转动、中文说明、状态快照。
-- `src/app.js`：涂色、CSS 3D 动画、播放控制、完整教学清单。
-- `tests/`：几何不变量、无效状态、随机逐层验算及时间轴检查。
+- `src/cube.js`: turns and actual-state validation for 3×3 and 4×4 cubes.
+- `src/solver.js`: 3×3 layer-by-layer teaching and integration with the 4×4 flow.
+- `src/reduction.js`: 4×4 center building by color, wing pairing, special parity cases, and reduction.
+- `src/timeline.js`: individual turns, Chinese explanations, and state snapshots.
+- `src/app.js`: coloring, CSS 3D animation, playback controls, and the complete lesson list.
+- `tests/`: geometric invariants, invalid states, randomized layer-by-layer verification, and timeline checks.
